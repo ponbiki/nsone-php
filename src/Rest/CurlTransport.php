@@ -1,10 +1,12 @@
 <?php
 
 /**
- * Copyright (c) 2014 NSONE, Inc
+ * Copyright (c) 2016 NSONE, Inc
  * Licensed under The MIT License (MIT). See LICENSE in project root
  *
  */
+
+// attemt to find a solution for the error suppression
 
 namespace NSONE\Rest;
 
@@ -14,7 +16,8 @@ use NSONE\Rest\TransportException;
 /**
  * an implementation of a transport using CURL
  */
-class CurlTransport extends Transport {
+class CurlTransport extends Transport
+{
 
     /**
      * read buffer
@@ -28,12 +31,14 @@ class CurlTransport extends Transport {
      * @param string $data data received
      * @return int length of data received
      */
-    protected function recv($cH, $data) {
+    protected function recv($cH, $data)
+    {
         $this->readBuf .= $data;
         return strlen($data);
     }
 
-    public function send($verb, $url, $body, $options) {
+    public function send($verb, $url, $body, $options)
+    {
 
         $this->readBuf = '';
         $curl = curl_init($url);
@@ -45,10 +50,11 @@ class CurlTransport extends Transport {
 
         curl_setopt($curl, CURLOPT_WRITEFUNCTION, array($this, 'recv'));
 
-        if (isset($options['timeout']))
+        if (isset($options['timeout'])) {
             curl_setopt($curl, CURLOPT_TIMEOUT, $options['timeout']);
+        }
 
-        if (@$options['ignore-ssl-errors']) {
+        if (@$options['ignore-ssl-errors']) { //check for alternatives
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         }
@@ -63,8 +69,9 @@ class CurlTransport extends Transport {
         }
 
 
-        if (@$this->config['verbosity'] > 2)
+        if (@$this->config['verbosity'] > 2) {
             curl_setopt($curl, CURLINFO_HEADER_OUT, true);
+        }
 
         switch ($verb) {
             case 'GET':
@@ -74,7 +81,7 @@ class CurlTransport extends Transport {
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $verb);
                 break;
             default:
-                throw new TransportException("unhandled cURL verb: {$verb}");
+                throw new TransportException("unhandled cURL verb: $verb");
         }
 
         curl_exec($curl);
@@ -82,9 +89,9 @@ class CurlTransport extends Transport {
 
         $this->resultCode = $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        if (@$this->config['verbosity'] > 2) {
+        if (@$this->config['verbosity'] > 2) { 
             $data = curl_getinfo($curl, CURLINFO_HEADER_OUT);
-            $data = preg_replace('/X-NSONE-Key: (.+)$/m', 'X-NSONE-Key: <redacted>', $data);
+            $data = preg_replace('/X-NSONE-Key: (.+)$/m', 'X-NSONE-Key: <redacted>', $data); // not ideal
             echo "---------------------------request start-------------------------\n";
             echo "WRITE: [$data]\n";
             if ($body) {
@@ -110,8 +117,9 @@ class CurlTransport extends Transport {
         }
 
         if ($this->resultCode != 200) {
-            if (isset($jsonOut['message']))
+            if (isset($jsonOut['message'])) {
                 $out = $jsonOut['message'];
+            }
             $e = new TransportException("request failed: ".$out, $this->resultCode);
             $e->rawResult = $out;
             throw $e;
