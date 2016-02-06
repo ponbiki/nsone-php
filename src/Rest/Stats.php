@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2014 NSONE, Inc
+ * Copyright (c) 2016 NSONE, Inc
  * Licensed under The MIT License (MIT). See LICENSE in project root
  *
  */
@@ -11,12 +11,13 @@ namespace NSONE\Rest;
 
 use NSONE\Rest\BaseResource;
 
-class Stats extends BaseResource {
+class Stats extends BaseResource
+{
 
     const ROOT = 'stats';
 
-    public function qps($zone=NULL, $domain=NULL, $type=NULL) {
-
+    public function qps($zone=NULL, $domain=NULL, $type=NULL)
+    {
         $url = '';
         if (empty($zone)) {
             $url = sprintf('%s/%s', self::ROOT, 'qps');
@@ -28,11 +29,10 @@ class Stats extends BaseResource {
             $url = sprintf('%s/%s/%s', self::ROOT, 'qps', $zone);
         }
         return $this->makeRequest('GET', $url);
-    
     }
     
-    public function usage($zone=NULL, $domain=NULL, $type=NULL, $options=array()) {
-
+    public function usage($zone=NULL, $domain=NULL, $type=NULL, $options=array())
+    {
         $url = '';
         if (empty($zone)) {
             $url = sprintf('%s/%s', self::ROOT, 'usage');
@@ -44,17 +44,17 @@ class Stats extends BaseResource {
             $url = sprintf('%s/%s/%s', self::ROOT, 'usage', $zone);
         }
         $args = array();
-        if (isset($options['period']))
+        if (isset($options['period'])) {
             $args['period'] = $options['period'];
+        }
         foreach (array('expand', 'aggregate', 'by_tier') as $k) {
-            if (isset($options[$k]))
-                $args[$k] = (bool)$options[$k];
+            if (isset($options[$k])) {
+                $args[$k] = (bool) $options[$k];
+            }
         }
         return $this->makeRequest('GET', $this->addArgs($url, $args));
     
     }
-
-
 
 }
 

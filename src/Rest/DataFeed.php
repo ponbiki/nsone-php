@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2014 NSONE, Inc
+ * Copyright (c) 2016 NSONE, Inc
  * Licensed under The MIT License (MIT). See LICENSE in project root
  *
  */
@@ -11,23 +11,27 @@ namespace NSONE\Rest;
 
 use NSONE\Rest\BaseResource;
 
-class DataFeed extends BaseResource {
+class DataFeed extends BaseResource
+{
 
     const ROOT = 'data/feeds';
 
     public $PASSTHRU_FIELDS = array('name', 'config', 'destinations');
     
-    public function list_($sourceid) {
+    public function list_($sourceid)
+    {
         $url = sprintf('%s/%s', self::ROOT, $sourceid);
         return $this->makeRequest('GET', $url);
     }
     
-    public function retrieve($sourceid, $feedid) {
+    public function retrieve($sourceid, $feedid)
+    {
         $url = sprintf('%s/%s/%s', self::ROOT, $sourceid, $feedid);
         return $this->makeRequest('GET', $url);
     }
 
-    public function create($sourceid, $name, $config, $options=array()) {
+    public function create($sourceid, $name, $config, $options=array())
+    {
         $body = array(
             'name' => $name,
             'config' => $config,
@@ -37,7 +41,8 @@ class DataFeed extends BaseResource {
         return $this->makeRequest('PUT', $url, $body);
     }
 
-    public function update($sourceid, $feedid, $options) {
+    public function update($sourceid, $feedid, $options)
+    {
         $body = array(
             'id' => $feedid,
         );
@@ -46,11 +51,10 @@ class DataFeed extends BaseResource {
         return $this->makeRequest('POST', $url, $body);
     }
 
-    public function delete($feedid) {
+    public function delete($feedid)
+    {
         $url = sprintf('%s/%s', self::ROOT, $feedid);
         return $this->makeRequest('DELETE', $url);
     }
-
-
 }
 

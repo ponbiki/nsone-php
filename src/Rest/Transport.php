@@ -25,7 +25,8 @@ abstract class Transport
      * get current HTTP result code
      * @return int
      */
-    public function getResultCode() {
+    public function getResultCode()
+    {
         return $this->resultCode;
     }
 

@@ -6,7 +6,7 @@
  *
  */
 
-// attemt to find a solution for the error suppression
+// attempt to find a solution for the error suppression
 
 namespace NSONE\Rest;
 
@@ -54,7 +54,7 @@ class CurlTransport extends Transport
             curl_setopt($curl, CURLOPT_TIMEOUT, $options['timeout']);
         }
 
-        if (@$options['ignore-ssl-errors']) { //check for alternatives
+        if (@$options['ignore-ssl-errors']) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         }
@@ -128,7 +128,4 @@ class CurlTransport extends Transport
         return $jsonOut;
 
     }
-
 }
-
-?>
